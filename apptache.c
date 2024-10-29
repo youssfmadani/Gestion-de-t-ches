@@ -4,6 +4,12 @@
 #define MAX 30
 
 typedef struct {
+    int day;
+    int month;
+    int year;
+} Date;
+
+typedef struct {
     char title[100];
     char description[256];
     Date due_date;
@@ -11,11 +17,7 @@ typedef struct {
     int status;
 } Task;
 
-typedef struct {
-    int day;
-    int month;
-    int year;
-} Date;
+
 
 void display_menu() {
      printf("\n----------------- Menu -----------------\n");
@@ -65,6 +67,80 @@ void display_tasks() {
         printf("Statut: %s\n", tasks[i].status ? "Complète" : "Incomplète");
     }
 }
+
+void modify_task() {
+    int index;
+    display_tasks();
+    printf("Choisissez le numéro de la tâche à modifier : ");
+    scanf("%d", &index);
+    
+    if (index < 1 || index > task_count) {
+        printf("Index invalide.\n");
+        return;
+    }
+    
+   
+    int choice;
+    
+    printf("\nVoulez-vous modifier tous les détails ? (1 pour Oui, 0 pour Non) : ");
+    int edit_all;
+    scanf("%d", &edit_all);
+
+    if (edit_all) {
+        printf("Nouveau titre : ");
+        scanf(" %[^\n]", tasks[index - 1].title);
+        printf("Nouvelle description : ");
+        scanf(" %[^\n]", tasks[index - 1].description);
+        printf("Nouvelle date d'échéance (JJ MM AAAA) : ");
+        scanf("%d %d %d", &tasks[index - 1].due_date.day, &tasks[index - 1].due_date.month, &tasks[index - 1].due_date.year);
+        printf("Nouvelle priorité (High/Low) : ");
+        scanf("%s", tasks[index - 1].priority);
+        printf("Statut (0 pour Incomplète, 1 pour Complète) : ");
+        scanf("%d", &tasks[index - 1].status);
+        printf("Tous les détails ont été mis à jour.\n");
+    } else {
+        do {
+            printf("\nModifier la tâche %d : %s\n", index, tasks[index - 1].title);
+            printf("1. Modifier la description\n");
+            printf("2. Modifier la date d'échéance\n");
+            printf("3. Modifier la priorité\n");
+            printf("4. Modifier le statut\n");
+            printf("0. Retourner au menu principal\n");
+            printf("Choisissez une option : ");
+            scanf("%d", &choice);
+            
+            switch (choice) {
+                case 1:
+                    printf("Nouvelle description : ");
+                    scanf(" %[^\n]", tasks[index - 1].description);
+                    printf("Description mise à jour.\n");
+                    break;
+                case 2:
+                    printf("Nouvelle date d'échéance (JJ MM AAAA) : ");
+                    scanf("%d %d %d", &tasks[index - 1].due_date.day, &tasks[index - 1].due_date.month, &tasks[index - 1].due_date.year);
+                    printf("Date d'échéance mise à jour.\n");
+                    break;
+                case 3:
+                    printf("Nouvelle priorité (High/Low) : ");
+                    scanf("%s", &tasks[index - 1].priority);
+                    printf("Priorité mise à jour.\n");
+                    break;
+                case 4:
+                    printf("Statut (0 pour Incomplète, 1 pour Complète) : ");
+                    scanf("%d", &tasks[index - 1].status);
+                    printf("Statut mis à jour.\n");
+                    break;
+                case 0:
+                    printf("Retour au menu principal.\n");
+                    break;
+                default:
+                    printf("Option invalide.\n");
+                    break;
+            }
+        } while (choice != 0);
+    }
+}
+
 
 
 Task tasks[MAX_TASKS];
