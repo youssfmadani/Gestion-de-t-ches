@@ -208,6 +208,25 @@ void display_tasks_by_status() {
     }
 }
 
+void filter_tasks() {
+    int choice;
+    printf("Choisissez un mode de filtrage :\n");
+    printf("1. Filtrer par Priorité\n");
+    printf("2. Filtrer par Statut\n");
+    printf("0. Retourner au menu principal\n");
+    printf("Votre choix : ");
+    scanf("%d", &choice);
+    
+    if (choice == 1) {
+        filter_tasks_by_priority();
+    } else if (choice == 2) {
+        display_tasks_by_status();
+    } else if (choice == 0) {
+        printf("Retour au menu principal.\n");
+    } else {
+        printf("Option invalide.\n");
+    }
+}
 
 
 
