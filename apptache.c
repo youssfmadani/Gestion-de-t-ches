@@ -162,6 +162,28 @@ void delete_task() {
     printf("Tâche supprimée.\n");
 }
 
+void filter_tasks_by_priority() {
+    if (task_count == 0) {
+        printf("Aucune tâche enregistrée.\n");
+        return;
+    }
+    char priority[10];
+    printf("Entrez la priorité (High/Low) : ");
+    scanf("%s", priority);
+    int found = 0;
+    for (int i = 0; i < task_count; i++) {
+        if (strcmp(tasks[i].priority, priority) == 0) {
+            printf("Tâche %d:\n", i + 1);
+            printf("Titre: %s\n", tasks[i].title);
+            found = 1;
+        }
+    }
+    if (!found) {
+        printf("Aucune tâche trouvée avec cette priorité.\n");
+    }
+}
+
+
 
 
 
