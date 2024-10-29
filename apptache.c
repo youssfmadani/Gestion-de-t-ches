@@ -17,7 +17,8 @@ typedef struct {
     int status;
 } Task;
 
-
+Task tasks[MAX_TASKS];
+int task_count = 0;
 
 void display_menu() {
      printf("\n----------------- Menu -----------------\n");
@@ -141,10 +142,30 @@ void modify_task() {
     }
 }
 
+void delete_task() {
+    int index;
+    if (task_count == 0) {
+        printf("Aucune tâche enregistrée.\n");
+        return;
+    }
+    display_tasks();
+    printf("Choisissez le numéro de la tâche à supprimer : ");
+    scanf("%d", &index);
+    if (index < 1 || index > task_count) {
+        printf("Index invalide.\n");
+        return;
+    }
+    for (int i = index - 1; i < task_count - 1; i++) {
+        tasks[i] = tasks[i + 1];
+    }
+    task_count--;
+    printf("Tâche supprimée.\n");
+}
 
 
-Task tasks[MAX_TASKS];
-int task_count = 0;
+
+
+
 
 
 
