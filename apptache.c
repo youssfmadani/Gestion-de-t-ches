@@ -183,8 +183,30 @@ void filter_tasks_by_priority() {
     }
 }
 
-
-
+void display_tasks_by_status() {
+    int status;
+    printf("Filtrer par statut : (0 pour Incomplète, 1 pour Complète) : ");
+    scanf("%d", &status);
+    
+    printf("\nListe des tâches avec le statut choisi :\n");
+    int found = 0;
+    
+    for (int i = 0; i < task_count; i++) {
+        if (tasks[i].status == status) {
+            printf("Tâche %d : %s\n", i + 1, tasks[i].title);
+            printf("Description : %s\n", tasks[i].description);
+            printf("Date d'échéance : %02d/%02d/%04d\n", tasks[i].due_date.day, tasks[i].due_date.month, tasks[i].due_date.year);
+            printf("Priorité : %s\n", tasks[i].priority);
+            printf("Statut : %s\n", status == 0 ? "Incomplète" : "Complète");
+            printf("\n");
+            found = 1;
+        }
+    }
+    
+    if (!found) {
+        printf("Aucune tâche trouvée avec le statut choisi.\n");
+    }
+}
 
 
 
