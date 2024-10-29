@@ -233,8 +233,43 @@ void filter_tasks() {
 
 
 
+
 int main() {
-	
+	int choice;
+	 
+    printf("\n Bienvenue dans l'application - Gestion des tâches - \n");
+
+    while (1) {
+        display_menu();
+        printf("Choisissez une option : ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1: 
+                add_task(); 
+                break;
+            case 2: 
+                display_tasks(); 
+                break;
+            case 3: 
+                modify_task(); 
+                break;
+            case 4: 
+                delete_task(); 
+                break;
+            case 5: 
+                filter_tasks();
+                break;
+            case 6: 
+                //sort_tasks(); 
+                break;
+            case 7: 
+            	//save_tasks_to_file(filename); // Sauvegarder les tâches avant de quitter
+                printf("Au revoir!\n");
+                return 0;
+            default: 
+                printf("Option invalide. Veuillez réessayer.\n");
+        }
+    }
 	
 	
 	
