@@ -18,6 +18,25 @@ typedef struct {
     int status;
 } Task;
 
+int check_date(int day, int month, int year) {
+        if (year < 2024) {
+            return 0; // Invalid year
+        }
+        if (month < 1 || month > 12) {
+            return 0; // Invalid month
+        }
+        // Days in each month
+        int days_in_month[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        // Check for leap year
+        if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
+            days_in_month[2] = 29; // February has 29 days in a leap year
+        }
+        if (day < 1 || day > days_in_month[month]) {
+            return 0; // Invalid day for the given month
+        }
+        return 1; // Valid date
+    }
+
 Task tasks[MAX_TASKS];
 int task_count = 0;
 
@@ -40,21 +59,40 @@ void add_task() {
         printf("Limite de tâches atteinte.\n");
         return;
     }
+
     Task new_task;
     printf("Titre : ");
     scanf(" %[^\n]", new_task.title);
     printf("Description : ");
     scanf(" %[^\n]", new_task.description);
-    
-    printf("Date d'échéance (JJ MM AAAA) : ");
-    scanf("%d %d %d", &new_task.due_date.day, &new_task.due_date.month, &new_task.due_date.year);
-    
+
+    int day, month, year;
+    int is_valid_date = 0;
+
+    do {
+        printf("Date d'échéance (JJ MM AAAA) : ");
+        scanf("%d %d %d", &day, &month, &year);
+
+        is_valid_date = check_date(day, month, year);
+
+        if (!is_valid_date) {
+            printf("Date invalide. Veuillez réessayer.\n");
+        }
+
+    } while (!is_valid_date);
+
+    new_task.due_date.day = day;
+    new_task.due_date.month = month;
+    new_task.due_date.year = year;
+
     printf("Priorité (High/Low) : ");
     scanf("%s", new_task.priority);
     new_task.status = 0; // Incomplète
+
     tasks[task_count++] = new_task;
     printf("Tâche ajoutée avec succès.\n");
 }
+
 
 void display_tasks() {
     if (task_count == 0) {
@@ -67,7 +105,7 @@ void display_tasks() {
         printf("Tâche %d:\n", i + 1);
         printf("Titre: %s\n", tasks[i].title);
         printf("Description: %s\n", tasks[i].description);
-        printf("Date d'échéance: %02d/%02d/%04d\n", tasks[i].due_date.day, tasks[i].due_date.month, tasks[i].due_date.year);
+	    printf("Date d'échéance : %02d/%02d/%04d\n", tasks[i].due_date.day, tasks[i].due_date.month, tasks[i].due_date.year);
         printf("Priorité: %s\n", tasks[i].priority);
         printf("Statut: %s\n", tasks[i].status ? "Complète" : "Incomplète");
         i++;
@@ -256,45 +294,57 @@ void sort_tasks() {
     printf("Tâches triées par date d'échéance.\n");
 }
 
-void save_tasks_to_file(char filename[]) {
-    FILE *file = fopen(filename, "a"); // Use "a" to append
+void save_tasks_to_file() {
+    char filename[100]; 
+    printf("Entrez le nom du fichier où sauvegarder les tâches (ex: tasks.txt) : ");
+    scanf("%s", filename);
+
+    FILE* file = fopen(filename, "w");
     if (file == NULL) {
-        printf("Erreur lors de l'ouverture du fichier.\n");
+        printf("Erreur: Impossible d'ouvrir le fichier %s pour sauvegarder les tâches.\n", filename);
         return;
     }
 
     for (int i = 0; i < task_count; i++) {
-        fprintf(file, "%s\n", tasks[i].title);
-        fprintf(file, "%s\n", tasks[i].description);
-        fprintf(file, "%d %d %d\n", tasks[i].due_date.day, tasks[i].due_date.month, tasks[i].due_date.year);
-        fprintf(file, "%s\n", tasks[i].priority);
-        fprintf(file, "%d\n", tasks[i].status);
+        if (fprintf(file, "%s\n%s\n%d %d %d\n%s\n%d\n", tasks[i].title, tasks[i].description,
+                    tasks[i].due_date.day, tasks[i].due_date.month, tasks[i].due_date.year,
+                    tasks[i].priority, tasks[i].status) < 0) {
+            printf("Erreur: Un problème est survenu lors de l'écriture des tâches dans le fichier %s.\n", filename);
+            fclose(file);
+            return;
+        }
     }
 
     fclose(file);
-    printf("Tâches sauvegardées.\n");
+    printf("Tâches sauvegardées avec succès dans le fichier %s.\n", filename);
 }
-void load_tasks_from_file(char filename[]) {
-    FILE *file = fopen(filename, "r");
+
+void load_tasks_from_file() {
+    char filename[100];  
+    printf("Entrez le nom du fichier à charger (ex: tasks.txt) : ");
+    scanf("%s", filename);
+
+    FILE* file = fopen(filename, "r");
     if (file == NULL) {
-        printf("Erreur lors de l'ouverture du fichier.\n");
+        printf("Erreur: Impossible d'ouvrir le fichier %s pour charger les tâches.\n", filename);
         return;
     }
 
-    while (task_count < MAX_TASKS) {
-        scanf("%99[^\n]\n", tasks[task_count].title); // Read title
-        scanf("%99[^\n]\n", tasks[task_count].description); // Read description
-        scanf("%d %d %d\n", &tasks[task_count].due_date.day, &tasks[task_count].due_date.month, &tasks[task_count].due_date.year); // Read due date
-        scanf("%s\n", tasks[task_count].priority); // Read priority
-        scanf("%d\n", &tasks[task_count].status); // Read status
+    task_count = 0;
+    while (fscanf(file, " %[^\n]\n%[^\n]\n%d %d %d\n%s\n%d\n", tasks[task_count].title,
+                  tasks[task_count].description, &tasks[task_count].due_date.day,
+                  &tasks[task_count].due_date.month, &tasks[task_count].due_date.year,
+                  tasks[task_count].priority, &tasks[task_count].status) == 7) {
         task_count++;
+        if (task_count >= MAX_TASKS) {
+            printf("Erreur: Nombre maximal de tâches atteint. Toutes les tâches ne peuvent pas être chargées.\n");
+            break;
+        }
     }
 
     fclose(file);
-    printf("Tâches chargées.\n");
+    printf("Tâches chargées avec succès depuis le fichier %s.\n", filename);
 }
-
-
 
 
 
@@ -330,10 +380,10 @@ int main() {
                 sort_tasks(); 
                 break;
             case 7: 
-            	save_tasks_to_file(filename); // Sauvegarder les tâches avant de quitter
+            	save_tasks_to_file(); // Sauvegarder les tâches avant de quitter
             	break;
             case 8 :
-            	load_tasks_from_file(filename);
+            	load_tasks_from_file();
             	break;
             case 9 :
             	 printf("Au revoir!\n");
