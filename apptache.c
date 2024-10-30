@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include<string.h>
 
-#define MAX 30
+#define MAX_TASKS 30
 
 typedef struct {
     int day;
@@ -21,7 +22,7 @@ Task tasks[MAX_TASKS];
 int task_count = 0;
 
 void display_menu() {
-     printf("\n----------------- Menu -----------------\n");
+     printf("\n----------------- Menu ----------------\n");
     printf("1. Ajouter une tâche\n");
     printf("2. Afficher les tâches\n");
     printf("3. Modifier une tâche\n");
@@ -59,13 +60,15 @@ void display_tasks() {
         return;
     }
     printf("\nListe des tâches :\n");
-    for (int i = 0; i < task_count; i++) {
+   int i=0;
+    while(i < task_count) {
         printf("Tâche %d:\n", i + 1);
         printf("Titre: %s\n", tasks[i].title);
         printf("Description: %s\n", tasks[i].description);
         printf("Date d'échéance: %02d/%02d/%04d\n", tasks[i].due_date.day, tasks[i].due_date.month, tasks[i].due_date.year);
         printf("Priorité: %s\n", tasks[i].priority);
         printf("Statut: %s\n", tasks[i].status ? "Complète" : "Incomplète");
+        i++;
     }
 }
 
@@ -155,7 +158,7 @@ void delete_task() {
         printf("Index invalide.\n");
         return;
     }
-    for (int i = index - 1; i < task_count - 1; i++) {
+    for(int i = index - 1; i < task_count - 1; i++) {
         tasks[i] = tasks[i + 1];
     }
     task_count--;
@@ -228,6 +231,28 @@ void filter_tasks() {
     }
 }
 
+void sort_tasks() {
+    if (task_count <= 1) {
+        printf("Pas assez de tâches pour trier.\n");
+        return;
+    }
+
+    for (int i = 0; i < task_count - 1; i++) {
+        for (int j = 0; j < task_count - i - 1; j++) {
+            // Compare due dates
+            if (tasks[j].due_date.year > tasks[j + 1].due_date.year ||
+                (tasks[j].due_date.year == tasks[j + 1].due_date.year && tasks[j].due_date.month > tasks[j + 1].due_date.month) ||
+                (tasks[j].due_date.year == tasks[j + 1].due_date.year && tasks[j].due_date.month == tasks[j + 1].due_date.month && tasks[j].due_date.day > tasks[j + 1].due_date.day)) {
+                // Swap tasks
+                Task temp = tasks[j];
+                tasks[j] = tasks[j + 1];
+                tasks[j + 1] = temp;
+            }
+        }
+    }
+
+    printf("Tâches triées par date d'échéance.\n");
+}
 
 
 
@@ -260,7 +285,7 @@ int main() {
                 filter_tasks();
                 break;
             case 6: 
-                //sort_tasks(); 
+                sort_tasks(); 
                 break;
             case 7: 
             	//save_tasks_to_file(filename); // Sauvegarder les tâches avant de quitter
