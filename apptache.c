@@ -85,8 +85,14 @@ void add_task() {
     new_task.due_date.month = month;
     new_task.due_date.year = year;
 
-    printf("Priorité (High/Low) : ");
-    scanf("%s", new_task.priority);
+    do {
+        printf("Priorité (High/Low) : ");
+        scanf("%s", new_task.priority);
+        if (strcmp(new_task.priority, "High") != 0 && strcmp(new_task.priority, "Low") != 0) {
+            printf("Priorité invalide. Veuillez entrer 'High' ou 'Low'.\n");
+        }
+    } while (strcmp(new_task.priority, "High") != 0 && strcmp(new_task.priority, "Low") != 0);
+    
     new_task.status = 0; // Incomplète
 
     tasks[task_count++] = new_task;
