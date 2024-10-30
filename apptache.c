@@ -22,14 +22,16 @@ Task tasks[MAX_TASKS];
 int task_count = 0;
 
 void display_menu() {
-     printf("\n----------------- Menu ----------------\n");
+    printf("\n----------------- Menu ----------------\n");
     printf("1. Ajouter une tâche\n");
     printf("2. Afficher les tâches\n");
     printf("3. Modifier une tâche\n");
     printf("4. Supprimer une tâche\n");
     printf("5. Filtrer les tâches\n");
     printf("6. Ordonner les tâches par date\n");
-    printf("7. Quitter et sauvegarder\n");
+    printf("7. Sauvegarder les tâches\n");
+    printf("8. Charger les tâches\n");
+    printf("9. Quitter\n");
     printf("-----------------------------------------\n");
 }
 
@@ -254,6 +256,46 @@ void sort_tasks() {
     printf("Tâches triées par date d'échéance.\n");
 }
 
+void save_tasks_to_file(char filename[]) {
+    FILE *file = fopen(filename, "a"); // Use "a" to append
+    if (file == NULL) {
+        printf("Erreur lors de l'ouverture du fichier.\n");
+        return;
+    }
+
+    for (int i = 0; i < task_count; i++) {
+        fprintf(file, "%s\n", tasks[i].title);
+        fprintf(file, "%s\n", tasks[i].description);
+        fprintf(file, "%d %d %d\n", tasks[i].due_date.day, tasks[i].due_date.month, tasks[i].due_date.year);
+        fprintf(file, "%s\n", tasks[i].priority);
+        fprintf(file, "%d\n", tasks[i].status);
+    }
+
+    fclose(file);
+    printf("Tâches sauvegardées.\n");
+}
+void load_tasks_from_file(char filename[]) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Erreur lors de l'ouverture du fichier.\n");
+        return;
+    }
+
+    while (task_count < MAX_TASKS) {
+        scanf("%99[^\n]\n", tasks[task_count].title); // Read title
+        scanf("%99[^\n]\n", tasks[task_count].description); // Read description
+        scanf("%d %d %d\n", &tasks[task_count].due_date.day, &tasks[task_count].due_date.month, &tasks[task_count].due_date.year); // Read due date
+        scanf("%s\n", tasks[task_count].priority); // Read priority
+        scanf("%d\n", &tasks[task_count].status); // Read status
+        task_count++;
+    }
+
+    fclose(file);
+    printf("Tâches chargées.\n");
+}
+
+
+
 
 
 
@@ -261,7 +303,7 @@ void sort_tasks() {
 
 int main() {
 	int choice;
-	 
+	char filename[] = "tasks.txt"; 
     printf("\n Bienvenue dans l'application - Gestion des tâches - \n");
 
     while (1) {
@@ -288,8 +330,13 @@ int main() {
                 sort_tasks(); 
                 break;
             case 7: 
-            	//save_tasks_to_file(filename); // Sauvegarder les tâches avant de quitter
-                printf("Au revoir!\n");
+            	save_tasks_to_file(filename); // Sauvegarder les tâches avant de quitter
+            	break;
+            case 8 :
+            	load_tasks_from_file(filename);
+            	break;
+            case 9 :
+            	 printf("Au revoir!\n");
                 return 0;
             default: 
                 printf("Option invalide. Veuillez réessayer.\n");
