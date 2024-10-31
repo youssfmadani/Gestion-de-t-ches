@@ -43,16 +43,16 @@ int day, month, year;
 int is_valid_date = 0;
 
 void display_menu() {
-    printf("\n----------------- Menu ----------------\n");
-    printf("1. Ajouter une tâche\n");
-    printf("2. Afficher les tâches\n");
-    printf("3. Modifier une tâche\n");
-    printf("4. Supprimer une tâche\n");
-    printf("5. Filtrer les tâches\n");
-    printf("6. Ordonner les tâches par date\n");
-    printf("7. Sauvegarder les tâches\n");
-    printf("8. Charger les tâches\n");
-    printf("9. Quitter\n");
+     printf("\n----------------- Menu ----------------\n");
+    printf("1. Ajouter une tâche                      -\n");
+    printf("2. Afficher les tâches                    -\n");
+    printf("3. Modifier une tâche                     -\n");
+    printf("4. Supprimer une tâche                    -\n");
+    printf("5. Filtrer les tâches                     -\n");
+    printf("6. Ordonner les tâches par date           -\n");
+    printf("7. Sauvegarder les tâches                 -\n");
+    printf("8. Charger les tâches                     -\n");
+    printf("9. Quitter                                -\n");
     printf("-----------------------------------------\n");
 }
 
