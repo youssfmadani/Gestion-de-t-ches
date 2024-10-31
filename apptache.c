@@ -39,18 +39,20 @@ int check_date(int day, int month, int year) {
 
 Task tasks[MAX_TASKS];
 int task_count = 0;
+int day, month, year;
+int is_valid_date = 0;
 
 void display_menu() {
     printf("\n----------------- Menu ----------------\n");
-    printf("1. Ajouter une tâche                      -\n");
-    printf("2. Afficher les tâches                    -\n");
-    printf("3. Modifier une tâche                     -\n");
-    printf("4. Supprimer une tâche                    -\n");
-    printf("5. Filtrer les tâches                     -\n");
-    printf("6. Ordonner les tâches par date           -\n");
-    printf("7. Sauvegarder les tâches                 -\n");
-    printf("8. Charger les tâches                     -\n");
-    printf("9. Quitter                                -\n");
+    printf("1. Ajouter une tâche\n");
+    printf("2. Afficher les tâches\n");
+    printf("3. Modifier une tâche\n");
+    printf("4. Supprimer une tâche\n");
+    printf("5. Filtrer les tâches\n");
+    printf("6. Ordonner les tâches par date\n");
+    printf("7. Sauvegarder les tâches\n");
+    printf("8. Charger les tâches\n");
+    printf("9. Quitter\n");
     printf("-----------------------------------------\n");
 }
 
@@ -65,9 +67,6 @@ void add_task() {
     scanf(" %[^\n]", new_task.title);
     printf("Description : ");
     scanf(" %[^\n]", new_task.description);
-
-    int day, month, year;
-    int is_valid_date = 0;
 
     do {
         printf("Date d'échéance (JJ MM AAAA) : ");
@@ -132,7 +131,7 @@ void modify_task() {
    
     int choice;
     
-    printf("\nVoulez-vous modifier tous les détails ? (1 pour Oui, 0 pour Non) : ");
+    printf("\n Voulez-vous modifier tous les détails ? (1 pour Oui, 0 pour Non) : ");
     int edit_all;
     scanf("%d", &edit_all);
 
@@ -141,35 +140,37 @@ void modify_task() {
         scanf(" %[^\n]", tasks[index - 1].title);
         printf("Nouvelle description : ");
         scanf(" %[^\n]", tasks[index - 1].description);
-        int day, month, year;
-    int is_valid_date = 0;
 
-    do {
         printf("Nouvelle date d'échéance (JJ MM AAAA) : ");
-        scanf("%d %d %d", &day, &month, &year);
-
-        is_valid_date = check_date(day, month, year);
-
-        if (!is_valid_date) {
-            printf("Date invalide. Veuillez réessayer.\n");
-        }
-
-    } while (!is_valid_date);
-
-    tasks[index - 1].due_date.day = day;
-    tasks[index - 1].due_date.month = month;
-    tasks[index - 1].due_date.year = year;
-
-    do {
-        printf("Nouvelle priorité (High/Low) : ");
+		  do {
+		        scanf("%d %d %d", &day, &month, &year);
+		
+		        is_valid_date = check_date(day, month, year);
+		
+		        if (!is_valid_date) {
+		            printf("Date invalide. Veuillez réessayer.\n");
+		        }
+		
+		    } while (!is_valid_date);
+		
+		    tasks[index - 1].due_date.day = day;
+		    tasks[index - 1].due_date.month = month;
+		    tasks[index - 1].due_date.year = year;        
+		printf("Nouvelle priorité (High/Low) : ");
+          do {
         scanf("%s", tasks[index - 1].priority);
         if (strcmp(tasks[index - 1].priority, "High") != 0 && strcmp(tasks[index - 1].priority, "Low") != 0) {
             printf("Priorité invalide. Veuillez entrer 'High' ou 'Low'.\n");
         }
-    } while (strcmp(tasks[index - 1].priority, "High") != 0 && strcmp(tasks[index - 1].priority, "Low") != 0);
+   		 } while (strcmp(tasks[index - 1].priority, "High") != 0 && strcmp(tasks[index - 1].priority, "Low") != 0);
         printf("Statut (0 pour Incomplète, 1 pour Complète) : ");
-        scanf("%d", &tasks[index - 1].status);
-        printf("Tous les détails ont ete mis a jour.\n");
+  do {
+        scanf("%s", tasks[index - 1].status);
+        if (tasks[index - 1].status == 0 && tasks[index - 1].status == 1) {
+            printf("Statut invalide !  Veuillez entrer (0 pour Incomplète, 1 pour Complète).\n");
+        }
+    } while (tasks[index - 1].status == 0 && tasks[index - 1].status == 1);        
+		printf("Tous les détails ont été mis à jour.\n");
     } else {
         do {
             printf("\nModifier la tâche %d : %s\n", index, tasks[index - 1].title);
@@ -189,19 +190,43 @@ void modify_task() {
                     break;
                 case 2:
                     printf("Nouvelle date d'échéance (JJ MM AAAA) : ");
-                    scanf("%d %d %d", &tasks[index - 1].due_date.day, &tasks[index - 1].due_date.month, &tasks[index - 1].due_date.year);
-                    printf("Date d'échéance mise à jour.\n");
+				       		  do {
+						        scanf("%d %d %d", &day, &month, &year);
+						
+						        is_valid_date = check_date(day, month, year);
+						
+						        if (!is_valid_date) {
+						            printf("Date invalide. Veuillez réessayer.\n");
+						        }
+						
+						    } while (!is_valid_date);
+						
+						    tasks[index - 1].due_date.day = day;
+						    tasks[index - 1].due_date.month = month;
+						    tasks[index - 1].due_date.year = year;                      
+							printf("Date d'échéance mise à jour.\n");
                     break;
                 case 3:
                     printf("Nouvelle priorité (High/Low) : ");
-                    scanf("%s", &tasks[index - 1].priority);
-                    printf("Priorité mise à jour.\n");
+				        do {
+				        scanf("%s", tasks[index - 1].priority);
+				       	 if (strcmp(tasks[index - 1].priority, "High") != 0 && strcmp(tasks[index - 1].priority, "Low") != 0) {
+				            printf("Priorité invalide. Veuillez entrer 'High' ou 'Low'.\n");
+				        }
+				   		 } while (strcmp(tasks[index - 1].priority, "High") != 0 && strcmp(tasks[index - 1].priority, "Low") != 0); 
+			               printf("Priorité mise à jour.\n");
                     break;
                 case 4:
-                    printf("Statut (0 pour Incomplète, 1 pour Complète) : ");
-                    scanf("%d", &tasks[index - 1].status);
-                    printf("Statut mis à jour.\n");
-                    break;
+				    printf("Statut (0 pour Incomplète, 1 pour Complète) : ");
+				    do {
+				        scanf("%d", &tasks[index - 1].status);
+				        if (tasks[index - 1].status != 0 && tasks[index - 1].status != 1) {
+				            printf("Statut invalide ! Veuillez entrer (0 pour Incomplète, 1 pour Complète).\n");
+				        }
+				    } while (tasks[index - 1].status != 0 && tasks[index - 1].status != 1);        
+				    printf("Statut mis à jour.\n");
+				    break;
+
                 case 0:
                     printf("Retour au menu principal.\n");
                     break;
@@ -305,32 +330,12 @@ void sort_tasks() {
         return;
     }
 
-    int order;
-    printf("Choisissez l'ordre de tri :\n");
-    printf("1. Croissant\n");
-    printf("2. Décroissant\n");
-    printf("Votre choix : ");
-    scanf("%d", &order);
-
     for (int i = 0; i < task_count - 1; i++) {
         for (int j = 0; j < task_count - i - 1; j++) {
-            int condition = 0;
-
-            // Determine the comparison based on the order chosen
-            if (order == 1) { // Ascending order
-                condition = (tasks[j].due_date.year > tasks[j + 1].due_date.year ||
-                             (tasks[j].due_date.year == tasks[j + 1].due_date.year && tasks[j].due_date.month > tasks[j + 1].due_date.month) ||
-                             (tasks[j].due_date.year == tasks[j + 1].due_date.year && tasks[j].due_date.month == tasks[j + 1].due_date.month && tasks[j].due_date.day > tasks[j + 1].due_date.day));
-            } else if (order == 2) { // Descending order
-                condition = (tasks[j].due_date.year < tasks[j + 1].due_date.year ||
-                             (tasks[j].due_date.year == tasks[j + 1].due_date.year && tasks[j].due_date.month < tasks[j + 1].due_date.month) ||
-                             (tasks[j].due_date.year == tasks[j + 1].due_date.year && tasks[j].due_date.month == tasks[j + 1].due_date.month && tasks[j].due_date.day < tasks[j + 1].due_date.day));
-            } else {
-                printf("Option de tri invalide.\n");
-                return;
-            }
-
-            if (condition) {
+            // Compare due dates
+            if (tasks[j].due_date.year > tasks[j + 1].due_date.year ||
+                (tasks[j].due_date.year == tasks[j + 1].due_date.year && tasks[j].due_date.month > tasks[j + 1].due_date.month) ||
+                (tasks[j].due_date.year == tasks[j + 1].due_date.year && tasks[j].due_date.month == tasks[j + 1].due_date.month && tasks[j].due_date.day > tasks[j + 1].due_date.day)) {
                 // Swap tasks
                 Task temp = tasks[j];
                 tasks[j] = tasks[j + 1];
@@ -341,7 +346,6 @@ void sort_tasks() {
 
     printf("Tâches triées par date d'échéance.\n");
 }
-
 
 void save_tasks_to_file() {
     char filename[100]; 
@@ -426,8 +430,7 @@ int main() {
                 filter_tasks();
                 break;
             case 6: 
-                sort_tasks();
-				display_tasks();  
+                sort_tasks(); 
                 break;
             case 7: 
             	save_tasks_to_file(); // Sauvegarder les tâches avant de quitter
